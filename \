@@ -1,0 +1,13 @@
+#ifndef _VEC_H_
+#define _VEC_H_
+// VECTOR STRUCTS
+typedef struct v2 {
+  float x, y;
+} v2;
+typedef struct v3 {
+  float x, y, z;
+} v3;
+typedef struct v4 {
+  float x, y, z, w;
+} v4;
+#endif
