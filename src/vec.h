@@ -27,49 +27,71 @@ typedef struct matrix {
 
 // GENERIC FUNCTIONS
 
-#define vadd(a, b) _Generic ((a) v2: v2add, v3: v3add, v4: v4add) (a,b)
+#define vadd(a, b) _Generic ((a), v2: v2add, v3: v3add, v4: v4add) (a,b)
 v2 v2add(v2 a, v2 b);
 v3 v3add(v3 a, v3 b);
 v4 v4add(v4 a, v4 b);
 
-#define vsub(a, b) _Generic ((a) v2: v2sub, v3: v3sub, v4: v4sub) (a,b)
+#define vsub(a, b) _Generic ((a), v2: v2sub, v3: v3sub, v4: v4sub) (a,b)
 v2 v2sub(v2 a, v2 b);
 v3 v3sub(v3 a, v3 b);
 v4 v4sub(v4 a, v4 b);
 
-#define vmul(a, b) _Generic ((a) v2: v2mul, v3: v3mul, v4: v4mul) (a,b)
+#define vmul(a, b) _Generic ((a), v2: v2mul, v3: v3mul, v4: v4mul) (a,b)
 v2 v2mul(v2 a, v2 b);
 v3 v3mul(v3 a, v3 b);
 v4 v4mul(v4 a, v4 b);
 
-#define vdiv(a, b) _Generic ((a) v2: v2div, v3: v3div, v4: v4div) (a,b)
+#define vdiv(a, b) _Generic ((a), v2: v2div, v3: v3div, v4: v4div) (a,b)
 v2 v2div(v2 a, v2 b);
 v3 v3div(v3 a, v3 b);
 v4 v4div(v4 a, v4 b);
 
-#define vlim(a, s) _Generic ((a) v2: v2lim, v3: v3lim, v4: v4lim) (a,s)
+#define vlim(a, s) _Generic ((a), v2: v2lim, v3: v3lim, v4: v4lim) (a,s)
 v2 v2lim(v2 a, float s);
 v3 v3lim(v3 a, float s);
 v4 v4lim(v4 a, float s);
 
-#define vmag(v) _Generic ((v) v2: v2mag, v3: v3mag, v4: v4mag) (v)
-float v3mag(v3 v);
+#define vmag(v) _Generic ((v), v2: v2mag, v3: v3mag, v4: v4mag) (v)
 float v2mag(v2 v);
+float v3mag(v3 v);
 float v4mag(v4 v);
 
-#define vscl(a, s) _Generic ((a) v2: v2scl, v3: v3scl, v4: v4scl) (a,s)
+#define vscl(a, s) _Generic ((a), v2: v2scl, v3: v3scl, v4: v4scl) (a,s)
 v2 v2scl(v2 a, float s);
 v3 v3scl(v3 a, float s);
 v4 v4scl(v4 a, float s);
 
-// vector util functions
+#define vdot(a, b) _Generic ((a), v2: v2dot, v3: v3dot, v4: v4dot) (a,b)
+float v2dot(v2 a, v2 b);
+float v3dot(v3 a, v3 b);
+float v4dot(v4 a, v4 b);
 
+#define vnorm(v) _Generic ((v), v2: v2norm, v3: v3norm, v4: v4norm) (v)
+v2 v2norm(v2 v);
+v3 v3norm(v3 v);
+v4 v4norm(v4 v);
+
+#define vcross(a, b) _Generic ((a), v2: v2cross, v3: v3cross, v4: v4cross) (a, b)
+v2 v2cross(v2 a, v2 b);
+v3 v3cross(v3 a, v3 b);
+v4 v4cross(v4 a, v4 b);
+
+// new struct functions
 v2 newv2(float x, float y);
 v3 newv3(float x, float y, float z);
 v4 newv4(float x, float y, float z, float w);
+matrix newm4(const float vals[4][4]);
+
+// equality functions
+#define veq(a, b) _Generic ((a), v2: v2eq, v3: v3eq, v4: v4eq) (a, b)
+int v2eq(v2 a, v2 b);
+int v3eq(v3 a, v3 b);
+int v4eq(v4 a, v4 b);
+int meq(matrix a, matrix b);
 
 // vec to ptr
-#define vtop(v) _Generic ((v) v2: v2top, v3: v3top, v4: v4top) (v)
+#define vtop(v) _Generic ((v), v2: v2top, v3: v3top, v4: v4top) (v)
 float* v2top(v2 v);
 float* v3top(v3 v);
 float* v4top(v4 v);
@@ -92,9 +114,19 @@ void ftfree(float** ft, int x);
 matrix matalloc(int x, int y);
 void matfree(matrix m);
 
+// common matrices
+matrix proj_mat(int w, int h, float fov, float znear, float zfar);
+matrix xrot_mat(float r);
+matrix yrot_mat(float r);
+matrix zrot_mat(float r);
+matrix invxy_mat();
+matrix id_mat();
+matrix empty_mat();
+matrix trans_mat(float x, float y, float z);
+
 // math util prototypes
-float rad2deg(float rad);
-float deg2rad(float deg);
+float rtod(float rad);
+float dtor(float deg);
 float flim(float x, float lim);
 
 // printing functions
@@ -102,5 +134,6 @@ float flim(float x, float lim);
 void printv2(v2 v);
 void printv3(v3 v);
 void printv4(v4 v);
+void printm(matrix m);
 
 #endif

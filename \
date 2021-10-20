@@ -334,7 +334,6 @@ void matfree(matrix m) {
   ftfree(m.m, m.x);
 }
 
-// projection matrix (camera matrix)
 matrix proj_mat(int w, int h, float fovd, float znear, float zfar) {
   float a = h/w;
   float fovr = dtor(fovd);
@@ -348,21 +347,13 @@ matrix proj_mat(int w, int h, float fovd, float znear, float zfar) {
   };
   return newm4(vals);
 }
-
-// point at matrix (look at)
 matrix point_mat(v4 pos, v4 target, v4 up) {
   v4 new_forward = vnorm(vsub(target, pos));
-  v4 new_up = vnorm(vsub(up, vscl(new_forward, vdot(up, new_forward))));
-  v4 new_right = vcross(new_up, new_forward);
-  const float vals[4][4] = {
-    {new_right.x,   new_right.y,   new_right.z,   0},
-    {new_up.x,      new_up.y,      new_up.z,      0},
-    {new_forward.x, new_forward.y, new_forward.z, 0},
-    {pos.x,         pos.y,         pos.z,         1},
-  };
-  return newm4(vals);
+  v4 new_up = vmul(new_forward, vdot(up, new_forward));
+  // const float vals[4][4] = {
+  //   {},
+  // }
 }
-
 matrix xrot_mat(float r) {
   const float vals[4][4] = {
     {1,  0,      0,      0},
@@ -421,18 +412,6 @@ matrix id_mat() {
   return m;
 }
 
-// matrix multiplication
-matrix mxm(matrix m1, matrix m2) {
-  matrix m = empty_mat();
-  for (int i = 0; i < m1.x; i++)
-   for (int j = 0; j < m1.y; j++)
-     m.m[i][j] = m1.m[i][0] * m2.m[0][j] +
-                 m1.m[i][1] * m2.m[1][j] +
-                 m1.m[i][2] * m2.m[2][j] +
-                 m1.m[i][3] * m2.m[3][j];
-  return m;
-}
-
 // math util prototypes
 float rtod(float rad){
   return rad * 180.0f / PI;
@@ -470,15 +449,22 @@ void printm(matrix m){
 // TEST FUNCTION //
 void test() {
   const float vals[4][4] = {
-    {1, 0, 1, 2},
-    {0, 5, 3, 0},
-    {3, 8, 4, 0},
-    {1, 1, 0, 0}
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
   };
   matrix m = newm4(vals);
-  matrix id = id_mat();
-  m = mxm(m, id);
   printm(m);
+  m.m[0][0] = 1.0;
+  m.m[1][1] = 1.0;
+  m.m[2][2] = 1.0;
+  m.m[3][3] = 1.0;
+  printm(m);
+  matrix id = newim4();
+  int eq = meq(m, id);
+  printf("Equal? ");
+  eq ? printf("true\n") : printf("false\n");
 }
 
 
