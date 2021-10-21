@@ -500,7 +500,7 @@ void test() {
 
 
 /* Uncomment to compile module for testing
-*/
 int main() {
   test();
 }
+*/
