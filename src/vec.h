@@ -113,6 +113,7 @@ void ftfree(float** ft, int x);
 // matrix struct
 matrix matalloc(int x, int y);
 void matfree(matrix m);
+matrix mcp(matrix m);
 
 // common matrices
 matrix proj_mat(int w, int h, float fov, float znear, float zfar);
