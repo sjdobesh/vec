@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <math.h>
 
-#define PI 3.1415926535
-
 // custom
 #include "vec.h"
+
+#define PI 3.1415926535
+
 /*---- VECTOR FUNCTIONS ----*/
 
 // vector addition
@@ -198,6 +199,7 @@ v4 v4cross(v4 a, v4 b){
 }
 
 
+/*---- NEW STRUCT FUNCTIONS ----*/
 
 // vector packing functions
 v2 newv2(float x, float y) {
@@ -221,6 +223,14 @@ matrix newm4(const float vals[4][4]) {
     }
   }
   return m;
+}
+// copy a matrix. remember matrices are ptrs
+matrix mcp(matrix m) {
+  matrix matcp = matalloc(m.x, m.y);
+  for (int i = 0; i < m.x; i++)
+    for (int j = 0; j < m.x; j++)
+      matcp.m[i][j] = m.m[i][j];
+  return matcp;
 }
 
 // equality testing
@@ -336,9 +346,9 @@ void matfree(matrix m) {
 
 // projection matrix (camera matrix)
 matrix proj_mat(int w, int h, float fovd, float znear, float zfar) {
-  float a = h/w;
-  float fovr = dtor(fovd);
-  float f = 1.0 / tan(fovr/2);
+  float a = (float)h/(float)w;
+  float fovr = dtor(fovd / 2.0f);
+  float f = 1.0 / tan(fovr / 2.0f);
   float q = zfar / (zfar - znear);
   const float vals[4][4] = {
     {a*f, 0,          0, 0},
@@ -469,16 +479,23 @@ void printm(matrix m){
 
 // TEST FUNCTION //
 void test() {
-  const float vals[4][4] = {
-    {1, 0, 1, 2},
-    {0, 5, 3, 0},
-    {3, 8, 4, 0},
-    {1, 1, 0, 0}
-  };
-  matrix m = newm4(vals);
-  matrix id = id_mat();
-  m = mxm(m, id);
-  printm(m);
+  /*
+  // define a projection matrix
+  int w, h;
+  float fov, znear, zfar;
+  w = 1920;
+  h = 1080;
+  fov = 90;
+  znear = 0.1;
+  zfar = 1000;
+  matrix proj = proj_mat(w, h, fov, znear, zfar);
+  matrix projcp = mcp(proj);
+  printm(proj);
+  printm(projcp);
+  matfree(proj);
+  printm(projcp);
+  matfree(projcp);
+  */
 }
 
 
