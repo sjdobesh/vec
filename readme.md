@@ -69,12 +69,12 @@ vX vcross(vX, vX);     // cross product
 ```
 #### Utility
 ```c
-void printv(vX); // print vector
-int veq(vX, vX); // vector equal (returns 0 on true)
-float* vtop(vX); // convert a vector to a float pointer
-v2 ptov2(float*) // convert a float pointer to a vector
-v3 ptov3(float*)
-v4 ptov4(float*)
+void printv(vX);  // print vector
+int veq(vX, vX);  // vector equal (returns 0 on true)
+float* vtop(vX);  // convert a vector to a float pointer
+v2 ptov2(float*); // convert a float pointer to a vector
+v3 ptov3(float*);
+v4 ptov4(float*);
 ```
 
 ### Matrices
