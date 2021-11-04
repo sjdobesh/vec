@@ -1,6 +1,7 @@
 // std
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <math.h>
 
 // custom
@@ -202,20 +203,57 @@ v4 v4cross(v4 a, v4 b){
 /*---- NEW STRUCT FUNCTIONS ----*/
 
 // vector packing functions
-v2 newv2(float x, float y) {
-  v2 v = {x, y};
-  return v;
+// v2
+v2 new_v2_f(float x, float y) {
+  v2 vec = {x, y};
+  return vec;
 }
-v3 newv3(float x, float y, float z) {
-  v3 v = {x, y, z};
-  return v;
+// v3
+v3 new_v3_f(float x, ...) {
+  va_list args;
+  va_start(args, 2);
+  v3 vec = {x, va_arg(args, double), va_arg(args, double)};
+  va_end(args);
+  return vec;
 }
-v4 newv4(float x, float y, float z, float w) {
-  v4 v = {x, y, z, w};
-  return v;
+v3 new_v3_v2(v2 v, ...) {
+  va_list args;
+  va_start(args, 1);
+  v3 vec = {v.x, v.y, va_arg(args, double)};
+  va_end(args);
+  return vec;
 }
+// v4
+v4 new_v4_f(float x, ...) {
+  va_list args;
+  va_start(args, 3);
+  v4 vec = {
+    x,
+    va_arg(args, double),
+    va_arg(args, double),
+    va_arg(args, double)};
+  va_end(args);
+  return vec;
+}
+v4 new_v4_v2(v2 v, ...) {
+  va_list args;
+  va_start(args, 2);
+  v4 vec = {v.x, v.y, va_arg(args, double), va_arg(args, double)};
+  va_end(args);
+  return vec;
+}
+v4 new_v4_v3(v3 v, ...) {
+  va_list args;
+  va_start(args, 1);
+  v4 vec = {v.x, v.y, v.z, va_arg(args, double)};
+  va_end(args);
+  return vec;
+}
+
+
+
 // allocate and populat a 4x4 homogenous matrix
-matrix newm4(const float vals[4][4]) {
+matrix new_m4(const float vals[4][4]) {
   matrix m = matalloc(4, 4);
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
@@ -356,7 +394,7 @@ matrix proj_mat(int w, int h, float fovd, float znear, float zfar) {
     {  0, 0,          q, 1},
     {  0, 0, -znear * q, 0}
   };
-  return newm4(vals);
+  return new_m4(vals);
 }
 
 // point at matrix (look at)
@@ -370,7 +408,7 @@ matrix point_mat(v4 pos, v4 target, v4 up) {
     {new_forward.x, new_forward.y, new_forward.z, 0},
     {pos.x,         pos.y,         pos.z,         1},
   };
-  return newm4(vals);
+  return new_m4(vals);
 }
 
 matrix xrot_mat(float r) {
@@ -380,7 +418,7 @@ matrix xrot_mat(float r) {
     {0, -sin(r), cos(r), 0},
     {0,  0,      0,      0}
   };
-  return newm4(vals);
+  return new_m4(vals);
 }
 matrix yrot_mat(float r) {
   const float vals[4][4] = {
@@ -389,7 +427,7 @@ matrix yrot_mat(float r) {
     {-sin(r), 0, cos(r), 0},
     {0,       0, 0,      1},
   };
-  return newm4(vals);
+  return new_m4(vals);
 }
 matrix zrot_mat(float r) {
   const float vals[4][4] = {
@@ -398,7 +436,7 @@ matrix zrot_mat(float r) {
     {0,       0, 1,      0},
     {0,       0, 0,      1},
   };
-  return newm4(vals);
+  return new_m4(vals);
 }
 matrix invxy_mat() {
   matrix m = id_mat();
@@ -413,7 +451,7 @@ matrix empty_mat() {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
   };
-  return newm4(vals);
+  return new_m4(vals);
 }
 matrix trans_mat(float x, float y, float z) {
   matrix m = id_mat();
@@ -479,7 +517,16 @@ void printm(matrix m){
 
 // TEST FUNCTION //
 void test() {
-  /*
+  printf("vector creation and math test:\n");
+  v2 a = new_v2(1.0, 2.0);
+  v3 b = new_v3(a, 3.0);
+  v3 c = new_v3(3.0, 2.0, 1.0);
+  v3 sum = vadd(b, c);
+  printv(a);
+  printv(b);
+  printv(c);
+  printv(sum);
+  printf("projection matrix test:\n");
   // define a projection matrix
   int w, h;
   float fov, znear, zfar;
@@ -495,12 +542,9 @@ void test() {
   matfree(proj);
   printm(projcp);
   matfree(projcp);
-  */
 }
 
 
-/* Uncomment to compile module for testing
 int main() {
   test();
 }
-*/
