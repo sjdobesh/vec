@@ -17,12 +17,13 @@ make
 ```
 ## Use
 
-### Basic Use Example
+### Basic Use Example - Vectors
 ```c
 v2 a = new_v2(1.0, 2.5);
 v2 b = new_v2(3.0, 1.5);
 a = vadd(a, b);
 printv(a);
+printv(vdot(a, b));
 ```
 
 ### Generic Variadic Constructors
@@ -36,7 +37,27 @@ v3 c = new_v3(a, 3.0);
 v4 d = new_v4(1.0, 2.0, 3.0, 4.0);
 v4 e = new_v4(a, 3.0, 4.0);
 v4 f = new_v4(b, 4.0);
-printv(c);
+v4 g = new_v4(a, a);
+printv(a);
+printv(b);
+printv(d);
+```
+
+### Matrices
+```c
+const float vals[4][4] = {
+  {1, 0, 0, 0},
+  {0, 1, 0, 0},
+  {0, 0, 1, 0},
+  {0, 0, 0, 1}
+}
+matrix m = new_m4(vals);
+int val = m.m[0][0];
+printm(m);
+matrix id = id_mat();
+meq(m, id) ? printf("equal\n") : printf("unequal\n");
+matfree(m);
+matfree(id);
 ```
 
 ## Functions
@@ -53,6 +74,7 @@ v3 new_v3(v2, float);
 v4 new_v4(float, float, float, float);
 v4 new_v4(v2, float, float);
 v4 new_v4(v3, float);
+v4 new_v4(v2, v2);
 ```
 #### Vector Math
 ```c

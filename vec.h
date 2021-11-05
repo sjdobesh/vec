@@ -121,8 +121,8 @@ v4 v4cross(v4 a, v4 b);
   float: new_v2_f, \
   double: new_v2_f  \
 ) (x, y)
-
 v2 new_v2_f(float x, float y);
+
 #define new_v3(x, ...) _Generic ((x), \
   float:  new_v3_f, \
   double: new_v3_f, \
@@ -131,16 +131,37 @@ v2 new_v2_f(float x, float y);
 v3 new_v3_f(float x, ...);
 v3 new_v3_v2(v2 v, ...);
 
-#define new_v4(x, ...) _Generic ((x), \
-  float:  new_v4_f,  \
-  double: new_v4_f,  \
-  v2:     new_v4_v2, \
-  v3:     new_v4_v3  \
-) (x, __VA_ARGS__)
-v4 new_v4_f(float x, ...);
-v4 new_v4_d(double x, ...);
-v4 new_v4_v2(v2 v, ...);
-v4 new_v4_v3(v3 v, ...);
+
+#define va_opt(dummy, ...) \
+  ( sizeof( (char[]){#__VA_ARGS__} ) == 1 ) ? "," : ""
+
+#define new_v4_v(y) _Generic((y), \
+  v2:     new_v4_v2v2, \
+  float:  new_v4_v2,   \
+  double: new_v4_v2    \
+)
+#define new_v4_default(y) _Generic((y), \
+  float:  new_v4_f, \
+  double: new_v4_f, \
+  v3:     new_v4_v3,\
+  default:new_v4_v3 \
+)
+#define new_v4(x, y, ...) _Generic((x), \
+  v2:      new_v4_v(y), \
+  default: new_v4_default(y)  \
+) (x, y __VA_OPT__(,) __VA_ARGS__)
+
+// #define new_v4(x, ...) _Generic ((x), \
+//   float:  new_v4_f,  \
+//   double: new_v4_f,  \
+//   v2:     new_v4_v2, \
+//   v3:     new_v4_v3  \
+// ) (x, __VA_ARGS__)
+//
+v4 new_v4_f(float x, float y, ...);
+v4 new_v4_v2(v2 v, float y, ...);
+v4 new_v4_v2v2(v2 a, v2 b, ...);
+v4 new_v4_v3(v3 v, float w, ...);
 
 matrix new_m4(const float vals[4][4]);
 
@@ -208,11 +229,18 @@ void printv3(v3 v);
 void printv4(v4 v);
 void printm(matrix m);
 
-/* beginning implementation code */// std
+
+
+/* beginning implementation code */
+
+// std
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <math.h>
+
+// custom
+#include "vec.h"
 
 #define PI 3.1415926535
 
@@ -431,29 +459,30 @@ v3 new_v3_v2(v2 v, ...) {
   return vec;
 }
 // v4
-v4 new_v4_f(float x, ...) {
+v4 new_v4_f(float x, float y, ...) {
   va_list args;
-  va_start(args, 3);
+  va_start(args, 2);
   v4 vec = {
     x,
-    va_arg(args, double),
+    y,
     va_arg(args, double),
     va_arg(args, double)};
   va_end(args);
   return vec;
 }
-v4 new_v4_v2(v2 v, ...) {
+v4 new_v4_v2(v2 v, float z, ...) {
   va_list args;
-  va_start(args, 2);
-  v4 vec = {v.x, v.y, va_arg(args, double), va_arg(args, double)};
+  va_start(args, 1);
+  v4 vec = {v.x, v.y, z, va_arg(args, double)};
   va_end(args);
   return vec;
 }
-v4 new_v4_v3(v3 v, ...) {
-  va_list args;
-  va_start(args, 1);
-  v4 vec = {v.x, v.y, v.z, va_arg(args, double)};
-  va_end(args);
+v4 new_v4_v2v2(v2 a, v2 b, ...) {
+  v4 vec = {a.x, a.y, b.x, b.y};
+  return vec;
+}
+v4 new_v4_v3(v3 v, float w, ...) {
+  v4 vec = {v.x, v.y, v.z, w};
   return vec;
 }
 
@@ -728,11 +757,13 @@ void test() {
   v2 a = new_v2(1.0, 2.0);
   v3 b = new_v3(a, 3.0);
   v3 c = new_v3(3.0, 2.0, 1.0);
-  v3 sum = vadd(b, c);
+  v4 d = new_v4(4.0, 3.0, 2.0, 1.0);
+  v4 e = new_v4(a, a);
   printv(a);
   printv(b);
   printv(c);
-  printv(sum);
+  printv(d);
+  printv(e);
   printf("projection matrix test:\n");
   // define a projection matrix
   int w, h;

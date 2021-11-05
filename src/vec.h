@@ -121,8 +121,8 @@ v4 v4cross(v4 a, v4 b);
   float: new_v2_f, \
   double: new_v2_f  \
 ) (x, y)
-
 v2 new_v2_f(float x, float y);
+
 #define new_v3(x, ...) _Generic ((x), \
   float:  new_v3_f, \
   double: new_v3_f, \
@@ -131,16 +131,37 @@ v2 new_v2_f(float x, float y);
 v3 new_v3_f(float x, ...);
 v3 new_v3_v2(v2 v, ...);
 
-#define new_v4(x, ...) _Generic ((x), \
-  float:  new_v4_f,  \
-  double: new_v4_f,  \
-  v2:     new_v4_v2, \
-  v3:     new_v4_v3  \
-) (x, __VA_ARGS__)
-v4 new_v4_f(float x, ...);
-v4 new_v4_d(double x, ...);
-v4 new_v4_v2(v2 v, ...);
-v4 new_v4_v3(v3 v, ...);
+
+#define va_opt(dummy, ...) \
+  ( sizeof( (char[]){#__VA_ARGS__} ) == 1 ) ? "," : ""
+
+#define new_v4_v(y) _Generic((y), \
+  v2:     new_v4_v2v2, \
+  float:  new_v4_v2,   \
+  double: new_v4_v2    \
+)
+#define new_v4_default(y) _Generic((y), \
+  float:  new_v4_f, \
+  double: new_v4_f, \
+  v3:     new_v4_v3,\
+  default:new_v4_v3 \
+)
+#define new_v4(x, y, ...) _Generic((x), \
+  v2:      new_v4_v(y), \
+  default: new_v4_default(y)  \
+) (x, y __VA_OPT__(,) __VA_ARGS__)
+
+// #define new_v4(x, ...) _Generic ((x), \
+//   float:  new_v4_f,  \
+//   double: new_v4_f,  \
+//   v2:     new_v4_v2, \
+//   v3:     new_v4_v3  \
+// ) (x, __VA_ARGS__)
+//
+v4 new_v4_f(float x, float y, ...);
+v4 new_v4_v2(v2 v, float y, ...);
+v4 new_v4_v2v2(v2 a, v2 b, ...);
+v4 new_v4_v3(v3 v, float w, ...);
 
 matrix new_m4(const float vals[4][4]);
 

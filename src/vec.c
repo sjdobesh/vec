@@ -224,29 +224,30 @@ v3 new_v3_v2(v2 v, ...) {
   return vec;
 }
 // v4
-v4 new_v4_f(float x, ...) {
+v4 new_v4_f(float x, float y, ...) {
   va_list args;
-  va_start(args, 3);
+  va_start(args, 2);
   v4 vec = {
     x,
-    va_arg(args, double),
+    y,
     va_arg(args, double),
     va_arg(args, double)};
   va_end(args);
   return vec;
 }
-v4 new_v4_v2(v2 v, ...) {
+v4 new_v4_v2(v2 v, float z, ...) {
   va_list args;
-  va_start(args, 2);
-  v4 vec = {v.x, v.y, va_arg(args, double), va_arg(args, double)};
+  va_start(args, 1);
+  v4 vec = {v.x, v.y, z, va_arg(args, double)};
   va_end(args);
   return vec;
 }
-v4 new_v4_v3(v3 v, ...) {
-  va_list args;
-  va_start(args, 1);
-  v4 vec = {v.x, v.y, v.z, va_arg(args, double)};
-  va_end(args);
+v4 new_v4_v2v2(v2 a, v2 b, ...) {
+  v4 vec = {a.x, a.y, b.x, b.y};
+  return vec;
+}
+v4 new_v4_v3(v3 v, float w, ...) {
+  v4 vec = {v.x, v.y, v.z, w};
   return vec;
 }
 
@@ -521,11 +522,13 @@ void test() {
   v2 a = new_v2(1.0, 2.0);
   v3 b = new_v3(a, 3.0);
   v3 c = new_v3(3.0, 2.0, 1.0);
-  v3 sum = vadd(b, c);
+  v4 d = new_v4(4.0, 3.0, 2.0, 1.0);
+  v4 e = new_v4(a, a);
   printv(a);
   printv(b);
   printv(c);
-  printv(sum);
+  printv(d);
+  printv(e);
   printf("projection matrix test:\n");
   // define a projection matrix
   int w, h;
