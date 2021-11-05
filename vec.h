@@ -1,8 +1,6 @@
 #ifndef _VEC_H_
 #define _VEC_H_
 
-typedef unsigned int uint;
-
 // VECTOR STRUCTS
 
 typedef struct v2 {
@@ -151,17 +149,10 @@ v3 new_v3_v2(v2 v, ...);
   default: new_v4_default(y)  \
 ) (x, y __VA_OPT__(,) __VA_ARGS__)
 
-// #define new_v4(x, ...) _Generic ((x), \
-//   float:  new_v4_f,  \
-//   double: new_v4_f,  \
-//   v2:     new_v4_v2, \
-//   v3:     new_v4_v3  \
-// ) (x, __VA_ARGS__)
-//
 v4 new_v4_f(float x, float y, ...);
 v4 new_v4_v2(v2 v, float y, ...);
-v4 new_v4_v2v2(v2 a, v2 b, ...);
-v4 new_v4_v3(v3 v, float w, ...);
+v4 new_v4_v2v2(v2 a, v2 b);
+v4 new_v4_v3(v3 v, float w);
 
 matrix new_m4(const float vals[4][4]);
 
@@ -477,11 +468,11 @@ v4 new_v4_v2(v2 v, float z, ...) {
   va_end(args);
   return vec;
 }
-v4 new_v4_v2v2(v2 a, v2 b, ...) {
+v4 new_v4_v2v2(v2 a, v2 b) {
   v4 vec = {a.x, a.y, b.x, b.y};
   return vec;
 }
-v4 new_v4_v3(v3 v, float w, ...) {
+v4 new_v4_v3(v3 v, float w) {
   v4 vec = {v.x, v.y, v.z, w};
   return vec;
 }

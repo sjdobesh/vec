@@ -242,11 +242,11 @@ v4 new_v4_v2(v2 v, float z, ...) {
   va_end(args);
   return vec;
 }
-v4 new_v4_v2v2(v2 a, v2 b, ...) {
+v4 new_v4_v2v2(v2 a, v2 b) {
   v4 vec = {a.x, a.y, b.x, b.y};
   return vec;
 }
-v4 new_v4_v3(v3 v, float w, ...) {
+v4 new_v4_v3(v3 v, float w) {
   v4 vec = {v.x, v.y, v.z, w};
   return vec;
 }
