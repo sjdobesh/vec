@@ -10,6 +10,7 @@ Just include the headeronly file in the top level of the repository. The src mod
 ```
 
 ### Compile
+**Note:** this won't compile cleanly with `-Wall`, but it's fine, just use everything like you're supposed to and its fine, i swear... :)
 ```
 git clone https://github.com/sjdobesh/vec
 cd vec/src
