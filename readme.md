@@ -19,13 +19,30 @@ make
 ```
 ## Use
 
-### Basic Use Example - Vectors
+### Basic Use - Vectors
 ```c
 v2 a = new_v2(1.0, 2.5);
 v2 b = new_v2(3.0, 1.5);
 a = vadd(a, b);
 printv(a);
 printv(vdot(a, b));
+```
+
+### Basic Use - Matrices
+```c
+const float vals[4][4] = {
+  {1, 0, 0, 0},
+  {0, 1, 0, 0},
+  {0, 0, 1, 0},
+  {0, 0, 0, 1}
+}
+matrix m = new_m4(vals);
+int val = m.m[0][0];
+printm(m);
+matrix id = id_mat();
+meq(m, id) ? printf("equal\n") : printf("unequal\n");
+matfree(m);
+matfree(id);
 ```
 
 ### Generic Variadic Constructors
@@ -44,23 +61,6 @@ v4 g = new_v4(a, a);
 printv(a);
 printv(b);
 printv(d);
-```
-
-### Matrices
-```c
-const float vals[4][4] = {
-  {1, 0, 0, 0},
-  {0, 1, 0, 0},
-  {0, 0, 1, 0},
-  {0, 0, 0, 1}
-}
-matrix m = new_m4(vals);
-int val = m.m[0][0];
-printm(m);
-matrix id = id_mat();
-meq(m, id) ? printf("equal\n") : printf("unequal\n");
-matfree(m);
-matfree(id);
 ```
 
 ## Structures
