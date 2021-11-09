@@ -5,7 +5,7 @@ A probably very bad vector library written in C. Supports 2-4 dimensional vector
 Just include the headeronly file in the top level of the repository. The src modules can be manually compiled for testing.
 
 ### Header Only
-```
+```c
 #include "vec.h"
 ```
 
