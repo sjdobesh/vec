@@ -6,12 +6,12 @@ Just include the headeronly file in the top level of the repository. The src mod
 
 **Note:** this won't compile cleanly with `-Wall`, but it's fine, just use everything like you're supposed to and its fine, i swear... :)
 
-### Header Only
+### _Header Only_
 ```c
 #include "vec.h"
 ```
 
-### Compile
+### _Compile_
 ```
 git clone https://github.com/sjdobesh/vec
 cd vec/src
@@ -20,7 +20,7 @@ make
 
 ## Use
 
-### Basic Use - Vectors
+### _Basic Use - Vectors_
 ```c
 v2 a = new_v2(1.0, 2.5);
 v2 b = new_v2(3.0, 1.5);
@@ -29,7 +29,7 @@ printv(a);
 printv(vdot(a, b));
 ```
 
-### Basic Use - Matrices
+### _Basic Use - Matrices_
 ```c
 const float vals[4][4] = {
   {1, 0, 0, 0},
@@ -46,7 +46,7 @@ matfree(m); // remember to free matrices you make!
 matfree(id);
 ```
 
-### Generic Variadic Constructors
+### _Generic Variadic Constructors_
 ```c
 // v2
 v2 a = new_v2(1.0, 2.0);
@@ -65,7 +65,7 @@ printv(d);
 ```
 
 ## Structures
-### Vectors
+### _Vectors_
 ```c
 struct v2 {
   float x, y;
@@ -77,7 +77,7 @@ struct v4 {
   float x, y, z, w;
 };
 ```
-### Matrix
+### _Matrix_
 ```c
 struct matrix {
   float** m;
@@ -87,8 +87,8 @@ struct matrix {
 
 ## Functions
 
-### Vectors
-#### _Allocation_
+### _Vectors_
+#### Allocation
 ```c
 // 2D vector
 v2 new_v2(float, float);
@@ -101,7 +101,7 @@ v4 new_v4(v2, float, float);
 v4 new_v4(v3, float);
 v4 new_v4(v2, v2);
 ```
-#### _Vector Math_
+#### Vector Math
 ```c
 vX vadd(vX, vX);       // element-wise addition
 vX vsub(vX, vX);       // element-wise subtraction
@@ -114,7 +114,7 @@ float vmag(vX, float); // vector magnitude
 vX vnorm(vX);          // normalize
 vX vcross(vX, vX);     // cross product
 ```
-#### _Utility_
+#### Utility
 ```c
 void printv(vX);  // print vector
 int veq(vX, vX);  // vector equal (returns 0 on true)
@@ -124,8 +124,8 @@ v3 ptov3(float*);
 v4 ptov4(float*);
 ```
 
-### Matrices
-#### _Allocation_
+### _Matrices_
+#### Allocation
 ```c
 matrix matalloc(int, int);        // allocate an arbitrarily sized matrix
 void matfree(matrix);             // free a matrix
@@ -145,14 +145,14 @@ matrix invxy_mat();               // invert x and y
 matrix id_mat();                  // identity matrix
 matrix empty_mat();               // empty matrix
 ```
-#### _Utility_
+#### Utility
 ```c
 void printm(matrix);     // print a matrix
 int meq(matrix, matrix); // matrix equal (returns 0 on true)
 matrix mcp(matrix);      // make a deep copy of a matrix
 ```
 
-### Misc
+### _Misc_
 These aren't intended for external use, but they are here if you want em.
 ```c
 float rtod(float rad);          // radian to degrees
