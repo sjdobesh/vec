@@ -39,6 +39,7 @@ v4 d = new_v4(1.0, 2.0, 3.0, 4.0);
 v4 e = new_v4(a, 3.0, 4.0);
 v4 f = new_v4(b, 4.0);
 v4 g = new_v4(a, a);
+// generic prints
 printv(a);
 printv(b);
 printv(d);
@@ -103,17 +104,16 @@ v4 ptov4(float*);
 ### Matrices
 #### Allocation
 ```c
-// generic matrix
 matrix matalloc(int, int);        // allocate an arbitrarily sized matrix
 void matfree(matrix);             // free a matrix
 matrix new_m4(const float[4][4]); // 4x4 homogenous matrix
 matrix proj_mat(                  // create a projection matrix
-  int w, int h, 
-  float fov, 
-  float znear, float zfar
+  int w, int h,                   // width, height
+  float fov,                      // field of view in degrees
+  float znear, float zfar         // z clip planes, near and far
 ); 
 matrix xrot_mat(float r);         // rotation matrices
-matrix yrot_mat(float r);
+matrix yrot_mat(float r);         // r is in degrees
 matrix zrot_mat(float r);
 matrix trans_mat(                 // translation matrix
   float x, float y, float z
