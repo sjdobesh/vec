@@ -17,6 +17,7 @@ git clone https://github.com/sjdobesh/vec
 cd vec/src
 make
 ```
+
 ## Use
 
 ### Basic Use - Vectors
@@ -41,7 +42,7 @@ int val = m.m[0][0];
 printm(m);
 matrix id = id_mat();
 meq(m, id) ? printf("equal\n") : printf("unequal\n");
-matfree(m);
+matfree(m); // remember to free matrices you make!
 matfree(id);
 ```
 
@@ -130,9 +131,9 @@ matrix matalloc(int, int);        // allocate an arbitrarily sized matrix
 void matfree(matrix);             // free a matrix
 matrix new_m4(const float[4][4]); // 4x4 homogenous matrix
 matrix proj_mat(                  // create a projection matrix
-  int w, int h,                   // width, height
-  float fov,                      // field of view in degrees
-  float znear, float zfar         // z clip planes, near and far
+  int w, int h,                   //   - width, height
+  float fov,                      //   - field of view in degrees
+  float znear, float zfar         //   - z clip planes, near and far
 ); 
 matrix xrot_mat(float r);         // rotation matrices
 matrix yrot_mat(float r);         // r is in degrees
