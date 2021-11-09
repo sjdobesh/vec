@@ -1,4 +1,4 @@
-# Vector library in C
+# **Vector library in C**
 A probably very bad vector library written in C. Supports 2-4 dimensional vectors, arbitrarily sized and 4x4 homogenous matrices, and basic functions for graphics programming.
 
 ## Quick Start
@@ -88,7 +88,7 @@ struct matrix {
 ## Functions
 
 ### Vectors
-#### Allocation
+#### _Allocation_
 ```c
 // 2D vector
 v2 new_v2(float, float);
@@ -101,7 +101,7 @@ v4 new_v4(v2, float, float);
 v4 new_v4(v3, float);
 v4 new_v4(v2, v2);
 ```
-#### Vector Math
+#### _Vector Math_
 ```c
 vX vadd(vX, vX);       // element-wise addition
 vX vsub(vX, vX);       // element-wise subtraction
@@ -114,7 +114,7 @@ float vmag(vX, float); // vector magnitude
 vX vnorm(vX);          // normalize
 vX vcross(vX, vX);     // cross product
 ```
-#### Utility
+#### _Utility_
 ```c
 void printv(vX);  // print vector
 int veq(vX, vX);  // vector equal (returns 0 on true)
@@ -125,7 +125,7 @@ v4 ptov4(float*);
 ```
 
 ### Matrices
-#### Allocation
+#### _Allocation_
 ```c
 matrix matalloc(int, int);        // allocate an arbitrarily sized matrix
 void matfree(matrix);             // free a matrix
@@ -145,9 +145,17 @@ matrix invxy_mat();               // invert x and y
 matrix id_mat();                  // identity matrix
 matrix empty_mat();               // empty matrix
 ```
-#### Utility
+#### _Utility_
 ```c
 void printm(matrix);     // print a matrix
 int meq(matrix, matrix); // matrix equal (returns 0 on true)
 matrix mcp(matrix);      // make a deep copy of a matrix
+```
+
+### Misc
+These aren't intended for external use, but they are here if you want em.
+```c
+float rtod(float rad);          // radian to degrees
+float dtor(float deg);          // degrees to radian
+float flim(float x, float lim); // float limit
 ```
