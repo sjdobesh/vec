@@ -63,6 +63,27 @@ matfree(m);
 matfree(id);
 ```
 
+## Structures
+### Vectors
+```c
+struct v2 {
+  float x, y;
+};
+struct v3 {
+  float x, y, z;
+};
+struct v4 {
+  float x, y, z, w;
+};
+```
+### Matrix
+```c
+struct matrix {
+  float** m;
+  int x, y;
+}
+```
+
 ## Functions
 
 ### Vectors
