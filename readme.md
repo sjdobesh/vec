@@ -130,26 +130,33 @@ v4 ptov4(float*);
 matrix matalloc(int, int);        // allocate an arbitrarily sized matrix
 void matfree(matrix);             // free a matrix
 matrix new_m4(const float[4][4]); // 4x4 homogenous matrix
-matrix proj_mat(                  // create a projection matrix
+matrix m4proj(                    // create a projection matrix
   int w, int h,                   //   - width, height
   float fov,                      //   - field of view in degrees
   float znear, float zfar         //   - z clip planes, near and far
 ); 
-matrix xrot_mat(float r);         // rotation matrices
-matrix yrot_mat(float r);         // r is in degrees
-matrix zrot_mat(float r);
-matrix trans_mat(                 // translation matrix
-  float x, float y, float z
+matrix m4lookat(                  // create a lookat matrix
+  v4 pos,                         // camera position
+  v4 target,                      // camera target position
+  v4 up                           // relative up vector for camera
 );
-matrix invxy_mat();               // invert x and y
-matrix id_mat();                  // identity matrix
-matrix empty_mat();               // empty matrix
+matrix m4xrot(float r);           // rotation matrices
+matrix m4yrot(float r);           // r is in degrees
+matrix m4zrot(float r);        
+matrix m4trans(                   // translation matrix
+  float x, float y, float z    
+);                             
+matrix m4invxy();                 // invert x and y
+matrix m4id();                    // identity matrix
+matrix m4empty();                 // empty matrix
 ```
 #### Utility
 ```c
-void printm(matrix);     // print a matrix
-int meq(matrix, matrix); // matrix equal (returns 0 on true)
-matrix mcp(matrix);      // make a deep copy of a matrix
+void printm(matrix);            // print a matrix
+int meq(matrix, matrix);        // matrix equal (returns 0 on true)
+matrix mcp(matrix);             // make a deep copy of a matrix
+v4 mxv(matrix m, v4 v);         // multiply an m4 by a v4
+matrix mxm(matrix a, matrix b); // multiply two matrices together
 ```
 
 ### _Misc_

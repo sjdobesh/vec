@@ -129,10 +129,6 @@ v2 new_v2_f(float x, float y);
 v3 new_v3_f(float x, ...);
 v3 new_v3_v2(v2 v, ...);
 
-
-#define va_opt(dummy, ...) \
-  ( sizeof( (char[]){#__VA_ARGS__} ) == 1 ) ? "," : ""
-
 #define new_v4_v(y) _Generic((y), \
   v2:     new_v4_v2v2, \
   float:  new_v4_v2,   \
@@ -195,14 +191,18 @@ void matfree(matrix m);
 matrix mcp(matrix m);
 
 // common matrices
-matrix proj_mat(int w, int h, float fov, float znear, float zfar);
-matrix xrot_mat(float r);
-matrix yrot_mat(float r);
-matrix zrot_mat(float r);
-matrix invxy_mat();
-matrix id_mat();
-matrix empty_mat();
-matrix trans_mat(float x, float y, float z);
+matrix m4proj(int w, int h, float fov, float znear, float zfar);
+matrix m4lookat(v4 pos, v4 target, v4 up);
+matrix m4xrot(float r);
+matrix m4yrot(float r);
+matrix m4zrot(float r);
+matrix m4invxy();
+matrix m4id();
+matrix m4empty();
+matrix m4trans(float x, float y, float z);
+matrix m4invert(matrix m);
+matrix mxm(matrix m1, matrix m2);
+v4 mxv(matrix m, v4 v);
 
 // math util prototypes
 float rtod(float rad);

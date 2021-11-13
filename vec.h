@@ -129,10 +129,6 @@ v2 new_v2_f(float x, float y);
 v3 new_v3_f(float x, ...);
 v3 new_v3_v2(v2 v, ...);
 
-
-#define va_opt(dummy, ...) \
-  ( sizeof( (char[]){#__VA_ARGS__} ) == 1 ) ? "," : ""
-
 #define new_v4_v(y) _Generic((y), \
   v2:     new_v4_v2v2, \
   float:  new_v4_v2,   \
@@ -195,14 +191,18 @@ void matfree(matrix m);
 matrix mcp(matrix m);
 
 // common matrices
-matrix proj_mat(int w, int h, float fov, float znear, float zfar);
-matrix xrot_mat(float r);
-matrix yrot_mat(float r);
-matrix zrot_mat(float r);
-matrix invxy_mat();
-matrix id_mat();
-matrix empty_mat();
-matrix trans_mat(float x, float y, float z);
+matrix m4proj(int w, int h, float fov, float znear, float zfar);
+matrix m4lookat(v4 pos, v4 target, v4 up);
+matrix m4xrot(float r);
+matrix m4yrot(float r);
+matrix m4zrot(float r);
+matrix m4invxy();
+matrix m4id();
+matrix m4empty();
+matrix m4trans(float x, float y, float z);
+matrix m4invert(matrix m);
+matrix mxm(matrix m1, matrix m2);
+v4 mxv(matrix m, v4 v);
 
 // math util prototypes
 float rtod(float rad);
@@ -482,11 +482,9 @@ v4 new_v4_v3(v3 v, float w) {
 // allocate and populat a 4x4 homogenous matrix
 matrix new_m4(const float vals[4][4]) {
   matrix m = matalloc(4, 4);
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
       m.m[i][j] = vals[i][j];
-    }
-  }
   return m;
 }
 // copy a matrix. remember matrices are ptrs
@@ -610,7 +608,7 @@ void matfree(matrix m) {
 }
 
 // projection matrix (camera matrix)
-matrix proj_mat(int w, int h, float fovd, float znear, float zfar) {
+matrix m4proj(int w, int h, float fovd, float znear, float zfar) {
   float a = (float)h/(float)w;
   float fovr = dtor(fovd / 2.0f);
   float f = 1.0 / tan(fovr / 2.0f);
@@ -625,7 +623,7 @@ matrix proj_mat(int w, int h, float fovd, float znear, float zfar) {
 }
 
 // point at matrix (look at)
-matrix point_mat(v4 pos, v4 target, v4 up) {
+matrix m4lookat(v4 pos, v4 target, v4 up) {
   v4 new_forward = vnorm(vsub(target, pos));
   v4 new_up = vnorm(vsub(up, vscl(new_forward, vdot(up, new_forward))));
   v4 new_right = vcross(new_up, new_forward);
@@ -638,7 +636,7 @@ matrix point_mat(v4 pos, v4 target, v4 up) {
   return new_m4(vals);
 }
 
-matrix xrot_mat(float r) {
+matrix m4xrot(float r) {
   const float vals[4][4] = {
     {1,  0,      0,      0},
     {0,  cos(r), sin(r), 0},
@@ -647,7 +645,7 @@ matrix xrot_mat(float r) {
   };
   return new_m4(vals);
 }
-matrix yrot_mat(float r) {
+matrix m4yrot(float r) {
   const float vals[4][4] = {
     {cos(r),  0, sin(r), 0},
     {0,       1, 0,      0},
@@ -656,7 +654,7 @@ matrix yrot_mat(float r) {
   };
   return new_m4(vals);
 }
-matrix zrot_mat(float r) {
+matrix m4zrot(float r) {
   const float vals[4][4] = {
     {cos(r),  sin(r), 0, 0},
     {-sin(r), cos(r), 0, 0},
@@ -665,13 +663,13 @@ matrix zrot_mat(float r) {
   };
   return new_m4(vals);
 }
-matrix invxy_mat() {
-  matrix m = id_mat();
+matrix m4invxy() {
+  matrix m = m4id();
   m.m[0][0] = -1;
   m.m[1][1] = -1;
   return m;
 }
-matrix empty_mat() {
+matrix m4empty() {
   const float vals[4][4] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -680,25 +678,57 @@ matrix empty_mat() {
   };
   return new_m4(vals);
 }
-matrix trans_mat(float x, float y, float z) {
-  matrix m = id_mat();
+matrix m4trans(float x, float y, float z) {
+  matrix m = m4id();
   m.m[3][0] = x;
   m.m[3][1] = y;
   m.m[3][2] = z;
   return m;
 }
 // allocate and return a 4x4 identity matrix
-matrix id_mat() {
+matrix m4id() {
   matrix m = matalloc(4, 4);
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
       m.m[i][i] = 1.0f;
-  }
   return m;
+}
+
+matrix m4invert(matrix m) {
+  matrix inverted = m4empty();
+  inverted.m[0][0] = m.m[0][0];
+  inverted.m[0][1] = m.m[1][0];
+  inverted.m[0][2] = m.m[2][0];
+  inverted.m[0][3] = 0;
+  inverted.m[1][0] = m.m[0][1];
+  inverted.m[1][1] = m.m[1][1];
+  inverted.m[1][2] = m.m[2][1];
+  inverted.m[1][3] = 0;
+  inverted.m[2][0] = m.m[0][2];
+  inverted.m[2][1] = m.m[1][2];
+  inverted.m[2][2] = m.m[2][2];
+  inverted.m[2][3] = 0;
+  inverted.m[3][0] = -(
+    m.m[3][0] * inverted.m[0][0] +
+    m.m[3][1] * inverted.m[1][0] +
+    m.m[3][2] * inverted.m[2][0]
+  );
+  inverted.m[3][1] = -(
+    m.m[3][0] * inverted.m[0][1] +
+    m.m[3][1] * inverted.m[1][1] +
+    m.m[3][2] * inverted.m[2][1]
+  );
+  inverted.m[3][2] = -(
+    m.m[3][0] * inverted.m[0][2] +
+    m.m[3][1] * inverted.m[1][2] +
+    m.m[3][2] * inverted.m[2][2]
+  );
+  inverted.m[3][3] = 1;
+  return inverted;
 }
 
 // matrix multiplication
 matrix mxm(matrix m1, matrix m2) {
-  matrix m = empty_mat();
+  matrix m = m4empty();
   for (int i = 0; i < m1.x; i++)
    for (int j = 0; j < m1.y; j++)
      m.m[i][j] = m1.m[i][0] * m2.m[0][j] +
@@ -706,6 +736,28 @@ matrix mxm(matrix m1, matrix m2) {
                  m1.m[i][2] * m2.m[2][j] +
                  m1.m[i][3] * m2.m[3][j];
   return m;
+}
+
+v4 mxv(matrix m, v4 v) {
+  v4 product = {
+    v.x * m.m[0][0] +
+    v.y * m.m[1][0] +
+    v.z * m.m[2][0] +
+    v.w * m.m[3][0],
+    v.x * m.m[0][1] +
+    v.y * m.m[1][1] +
+    v.z * m.m[2][1] +
+    v.w * m.m[3][1],
+    v.x * m.m[0][2] +
+    v.y * m.m[1][2] +
+    v.z * m.m[2][2] +
+    v.w * m.m[3][2],
+    v.x * m.m[0][3] +
+    v.y * m.m[1][3] +
+    v.z * m.m[2][3] +
+    v.w * m.m[3][3],
+  };
+  return product;
 }
 
 // math util prototypes
@@ -764,7 +816,7 @@ void test() {
   fov = 90;
   znear = 0.1;
   zfar = 1000;
-  matrix proj = proj_mat(w, h, fov, znear, zfar);
+  matrix proj = m4proj(w, h, fov, znear, zfar);
   matrix projcp = mcp(proj);
   printm(proj);
   printm(projcp);
