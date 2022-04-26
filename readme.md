@@ -1,26 +1,34 @@
 # **Vector library in C**
-A probably very bad vector library written in C. Supports 2-4 dimensional vectors, arbitrarily sized and 4x4 homogenous matrices, and basic functions for graphics programming.
+A probably very bad vector library written in C. 
+Supports 2-4 dimensional vectors, arbitrarily sized and 4x4 
+homogenous matrices, and basic functions for graphics programming.
 
-## Quick Start
-Just include the headeronly file in the top level of the repository. The src modules can be manually compiled for testing.
+## version branches
+- **master - stable**
+  - compiles without warnings
+  - supports generic prints and constructors
+- **experimental - unstable**
+  - compiles with warnings
+  - supports variadic object constructors >:)
 
-**Note:** this won't compile cleanly with `-Wall`, but it's fine, just use everything like you're supposed to and its fine, i swear... :)
+## quick start
+just include the headeronly file in the top level of the repository. the src modules can be manually compiled for testing.
 
-### _Header Only_
+### _header only_
 ```c
 #include "vec.h"
 ```
 
-### _Compile_
+### _compile_
 ```
 git clone https://github.com/sjdobesh/vec
 cd vec/src
 make
 ```
 
-## Use
+## use
 
-### _Basic Use - Vectors_
+### _basic use - vectors_
 ```c
 v2 a = new_v2(1.0, 2.5);
 v2 b = new_v2(3.0, 1.5);
@@ -29,7 +37,7 @@ printv(a);
 printv(vdot(a, b));
 ```
 
-### _Basic Use - Matrices_
+### _basic use - matrices_
 ```c
 const float vals[4][4] = {
   {1, 0, 0, 0},
@@ -46,7 +54,7 @@ matfree(m); // remember to free matrices you make!
 matfree(id);
 ```
 
-### _Generic Variadic Constructors_
+### _generic variadic constructors_
 ```c
 // v2
 v2 a = new_v2(1.0, 2.0);
@@ -78,6 +86,7 @@ struct v4 {
 };
 ```
 ### _Matrix_
+
 ```c
 struct matrix {
   float** m;
@@ -85,10 +94,11 @@ struct matrix {
 }
 ```
 
-## Functions
+## functions
 
-### _Vectors_
-#### Allocation
+### _vectors_
+#### allocation
+
 ```c
 // 2D vector
 v2 new_v2(float, float);
