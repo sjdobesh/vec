@@ -45,7 +45,4 @@ var menudata={children:[
 {text:"r",url:"globals_func.html#index_r"},
 {text:"v",url:"globals_func.html#index_v"}]},
 {text:"Typedefs",url:"globals_type.html"},
-{text:"Macros",url:"globals_defs.html",children:[
-{text:"m",url:"globals_defs.html#index_m"},
-{text:"p",url:"globals_defs.html#index_p"},
-{text:"v",url:"globals_defs.html#index_v"}]}]}]}]}
+{text:"Macros",url:"globals_defs.html"}]}]}]}
