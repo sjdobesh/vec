@@ -1630,9 +1630,9 @@ m4 m4proj(int w, int h, float fovd, float znear, float zfar) {
  * look at/point at matrix.
  * create the necessary transform to rotate towards a position in space.
  *
- * @param pos
- * @param target
- * @param up
+ * @param pos v4 point to look from
+ * @param target v4 point to look at
+ * @param up v4 vector describing the viewers relative up
  * @return m4 with rotation transform
  */
 m4 m4lookat(v4 pos, v4 target, v4 up) {

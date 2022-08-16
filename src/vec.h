@@ -173,22 +173,6 @@ void v4print(v4 v);
 
 /* generic function macros */
 
-/* switches for vadd */
-#define v2add(b)_Generic ((b), \
-  v2 : v2v2add, \
-  v3 : v2v3add, \
-  v4 : v2v4add  \
-)
-#define v3add(b)_Generic ((b), \
-  v2 : v3v2add, \
-  v3 : v3v3add, \
-  v4 : v3v4add  \
-)
-#define v4add(b)_Generic ((b), \
-  v2 : v4v2add, \
-  v3 : v4v3add, \
-  v4 : v4v4add  \
-)
 /**
  * vector addition.
  * sums a and b element wise.
@@ -201,27 +185,22 @@ void v4print(v4 v);
  * @return an element wise sum vector
  */
 #define vadd(a, b) _Generic ((a), \
-  v2 : v2add(b), \
-  v3 : v3add(b), \
-  v4 : v4add(b) \
-) (a, b)
+  v2 : _Generic ((b), \
+    v2 : v2v2add, \
+    v3 : v2v3add, \
+    v4 : v2v4add  \
+  ),\
+  v3 : _Generic ((b), \
+    v2 : v3v2add, \
+    v3 : v3v3add, \
+    v4 : v3v4add  \
+  ),\
+  v4 : _Generic ((b), \
+    v2 : v4v2add, \
+    v3 : v4v3add, \
+    v4 : v4v4add  \
+)) (a, b)
 
-/* switches for vsub */
-#define v2sub(b)_Generic ((b), \
-  v2 : v2v2sub, \
-  v3 : v2v3sub, \
-  v4 : v2v4sub  \
-)
-#define v3sub(b)_Generic ((b), \
-  v2 : v3v2sub, \
-  v3 : v3v3sub, \
-  v4 : v3v4sub  \
-)
-#define v4sub(b)_Generic ((b), \
-  v2 : v4v2sub, \
-  v3 : v4v3sub, \
-  v4 : v4v4sub  \
-)
 /**
  * vector subtraction.
  * subtracts b from a element wise.
@@ -234,27 +213,22 @@ void v4print(v4 v);
  * @return an element wise difference vector
  */
 #define vsub(a, b) _Generic ((a), \
-  v2: v2sub(b), \
-  v3: v3sub(b), \
-  v4: v4sub(b)  \
-) (a, b)
+v2 : _Generic ((b), \
+  v2 : v2v2sub, \
+  v3 : v2v3sub, \
+  v4 : v2v4sub  \
+),\
+v3 _Generic ((b), \
+  v2 : v3v2sub, \
+  v3 : v3v3sub, \
+  v4 : v3v4sub  \
+),\
+v4 _Generic ((b), \
+  v2 : v4v2sub, \
+  v3 : v4v3sub, \
+  v4 : v4v4sub  \
+)) (a, b)
 
-/* switches for vmul */
-#define v2mul(b)_Generic ((b), \
-  v2 : v2v2mul, \
-  v3 : v2v3mul, \
-  v4 : v2v4mul  \
-)
-#define v3mul(b)_Generic ((b), \
-  v2 : v3v2mul, \
-  v3 : v3v3mul, \
-  v4 : v3v4mul  \
-)
-#define v4mul(b)_Generic ((b), \
-  v2 : v4v2mul, \
-  v3 : v4v3mul, \
-  v4 : v4v4mul  \
-)
 /**
  * vector multiplication.
  * multiplies a and b element wise.
@@ -265,27 +239,22 @@ void v4print(v4 v);
  * @return an N dimensional element wise product
  */
 #define vmul(a, b) _Generic ((a), \
-  v2: v2mul(b), \
-  v3: v3mul(b), \
-  v4: v4mul(b)  \
-) (a, b)
+v2 : _Generic ((b), \
+  v2 : v2v2mul, \
+  v3 : v2v3mul, \
+  v4 : v2v4mul  \
+),\
+v3 : _Generic ((b), \
+  v2 : v3v2mul, \
+  v3 : v3v3mul, \
+  v4 : v3v4mul  \
+),\
+v4 : _Generic ((b), \
+  v2 : v4v2mul, \
+  v3 : v4v3mul, \
+  v4 : v4v4mul  \
+)) (a, b)
 
-/* switches for vmul */
-#define v2div(b)_Generic ((b), \
-  v2 : v2v2div, \
-  v3 : v2v3div, \
-  v4 : v2v4div  \
-)
-#define v3div(b)_Generic ((b), \
-  v2 : v3v2div, \
-  v3 : v3v3div, \
-  v4 : v3v4div  \
-)
-#define v4div(b)_Generic ((b), \
-  v2 : v4v2div, \
-  v3 : v4v3div, \
-  v4 : v4v4div  \
-)
 /**
  * vector division.
  * divides a by b element wise.
@@ -296,10 +265,21 @@ void v4print(v4 v);
  * @return an N dimensional element wise product
  */
 #define vdiv(a, b) _Generic ((a), \
-  v2: v2div(b), \
-  v3: v3div(b), \
-  v4: v4div(b)  \
-) (a, b)
+v2 : _Generic ((b), \
+  v2 : v2v2div, \
+  v3 : v2v3div, \
+  v4 : v2v4div  \
+),\
+v3_: _Generic ((b), \
+  v2 : v3v2div, \
+  v3 : v3v3div, \
+  v4 : v3v4div  \
+),\
+v4: _Generic ((b), \
+  v2 : v4v2div, \
+  v3 : v4v3div, \
+  v4 : v4v4div  \
+)) (a, b)
 
 /**
  * vector limit.
@@ -342,22 +322,6 @@ void v4print(v4 v);
   v4: v4scl  \
 ) (v, s)
 
-/* switches for vdot */
-#define v2dot(b)_Generic ((b), \
-  v2 : v2v2dot, \
-  v3 : v2v3dot, \
-  v4 : v2v4dot  \
-)
-#define v3dot(b)_Generic ((b), \
-  v2 : v3v2dot, \
-  v3 : v3v3dot, \
-  v4 : v3v4dot  \
-)
-#define v4dot(b)_Generic ((b), \
-  v2 : v4v2dot, \
-  v3 : v4v3dot, \
-  v4 : v4v4dot  \
-)
 /**
  * vector dot product.
  * get the dot product of vectors a and b.
@@ -367,10 +331,21 @@ void v4print(v4 v);
  * @return a scalar describing the similarity of the vectors
  */
 #define vdot(a, b) _Generic ((a), \
-  v2: v2dot(b), \
-  v3: v3dot(b), \
-  v4: v4dot(b)  \
-) (a, b)
+v2 : _Generic ((b), \
+  v2 : v2v2dot, \
+  v3 : v2v3dot, \
+  v4 : v2v4dot  \
+),\
+v3 : _Generic ((b), \
+  v2 : v3v2dot, \
+  v3 : v3v3dot, \
+  v4 : v3v4dot  \
+),\
+v4 : _Generic ((b), \
+  v2 : v4v2dot, \
+  v3 : v4v3dot, \
+  v4 : v4v4dot  \
+)) (a, b)
 
 /**
  * vector normalize.
@@ -385,22 +360,6 @@ void v4print(v4 v);
   v4: v4norm  \
 ) (v)
 
-/* switches for vcross. order matters! */
-#define v2cross(b)_Generic ((b), \
-  v2 : v2v2cross, \
-  v3 : v2v3cross, \
-  v4 : v2v4cross  \
-)
-#define v3cross(b)_Generic ((b), \
-  v2 : v3v2cross, \
-  v3 : v3v3cross, \
-  v4 : v3v4cross  \
-)
-#define v4cross(b)_Generic ((b), \
-  v2 : v4v2cross, \
-  v3 : v4v3cross, \
-  v4 : v4v4cross  \
-)
 /**
  * vector cross product.
  * all vectors will be promoted to v4 with zeroed .w.
@@ -410,27 +369,22 @@ void v4print(v4 v);
  * @return a v4 containing the cross product vector of a and b in r3
  */
 #define vcross(a, b) _Generic ((a), \
-  v2: v2cross(b), \
-  v3: v3cross(b), \
-  v4: v4cross(b)  \
-) (a, b)
+v2 : _Generic ((b), \
+  v2 : v2v2cross, \
+  v3 : v2v3cross, \
+  v4 : v2v4cross  \
+),\
+v3 : _Generic ((b), \
+  v2 : v3v2cross, \
+  v3 : v3v3cross, \
+  v4 : v3v4cross  \
+),\
+v4 : _Generic ((b), \
+  v2 : v4v2cross, \
+  v3 : v4v3cross, \
+  v4 : v4v4cross  \
+)) (a, b)
 
-/* switches for veq */
-#define v2eq(b)_Generic ((b), \
-  v2 : v2v2eq, \
-  v3 : v2v3eq, \
-  v4 : v2v4eq  \
-)
-#define v3eq(b)_Generic ((b), \
-  v2 : v3v2eq, \
-  v3 : v3v3eq, \
-  v4 : v3v4eq  \
-)
-#define v4eq(b)_Generic ((b), \
-  v2 : v4v2eq, \
-  v3 : v4v3eq, \
-  v4 : v4v4eq  \
-)
 /**
  * vector equal.
  * promotes arguments to the same type and compares.
@@ -440,10 +394,21 @@ void v4print(v4 v);
  * @return a boolean for if a == b
  */
 #define veq(a, b) _Generic ((a), \
-  v2: v2eq(b), \
-  v3: v3eq(b), \
-  v4: v4eq(b)  \
-) (a, b)
+v2 : _Generic ((b), \
+  v2 : v2v2eq, \
+  v3 : v2v3eq, \
+  v4 : v2v4eq  \
+),\
+v3 :_Generic ((b), \
+  v2 : v3v2eq, \
+  v3 : v3v3eq, \
+  v4 : v3v4eq  \
+),\
+v4 : _Generic ((b), \
+  v2 : v4v2eq, \
+  v3 : v4v3eq, \
+  v4 : v4v4eq  \
+)) (a, b)
 
 /**
  * matrix vector multiplication.
